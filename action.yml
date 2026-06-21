@@ -7,9 +7,58 @@ inputs:
     required: false
     default: ${{ github.token }}
   custom-message:
-    description: 'An optional custom Markdown message to post. You can use {{prNumber}} and {{baseBranch}} as placeholders.'
+    description: 'The Markdown message to post. You can use {{prNumber}} and {{baseBranch}} as placeholders.'
     required: false
-    default: ''
+    default: |
+      ## Welcome and Thank You! 👋
+
+      Thank you for opening this pull request!
+
+      ### ⏳ Note on Review Times
+
+      The maintainer may not react immediately. This is expected and normal, as the project is maintained as time permits. Thank you for your patience!
+
+      ### ✅ Your Action Items
+
+      1. **Link and Auto-Close Issues:**
+
+         If this PR fixes any existing issues, please make sure to include closing keywords (such as `closes #123` or `fixes #456`) in your first PR message (the main description). This links the issues and automatically closes them when this PR is merged.
+
+      2. **Invite Reviewers on Linked Issues:**
+
+         If this is a non-trivial PR, please leave a comment on the linked issues to invite others to review your changes. You can copy and paste the encouraging template below, which includes guidance to help reviewers know what to do:
+
+         ```text
+         Hey everyone! I have opened a PR (#{{prNumber}}) to resolve this issue. I am inviting you to help test and review the PR!
+
+         **No write access is needed** to participate, leave a review, or approve the PR, and no deep understanding of the codebase is required. Everyone benefits from multiple reviews!
+
+         ## How to Review
+
+         1. Inspect for Malicious Code:
+
+            Go to the **"Files changed"** tab, or check out the PR locally:
+            
+            gh pr checkout {{prNumber}}
+
+            git diff origin/{{baseBranch}}
+
+         2. Run the Project:
+            Test the changes locally to verify they resolve the issue and do not introduce new problems.
+
+         3. Submit a Review:
+
+            - If you find issues, submit a review or comment with your feedback.
+            - If everything looks correct, submit an **Approve** review and briefly explain what you checked/tested.
+         ```
+
+      ### 🛠️ For the Maintainer
+
+      If this PR is reviewed and approved by **two or more independent (standalone) reviewers**, it will significantly speed up the merge progress.
+
+      ---
+
+      _Automated message maintained by [Atliac](https://github.com/Atliac/pr-welcome)._
 branding:
   icon: 'message-square'
   color: 'purple'
@@ -21,13 +70,9 @@ runs:
       env:
         CUSTOM_MESSAGE: ${{ inputs.custom-message }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        ACTION_PATH: ${{ github.action_path }}
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const fs = require('fs');
-          const path = require('path');
-
           const token = process.env.GITHUB_TOKEN;
           if (!token) {
             throw new Error('No GitHub token provided. Set github-token input or ensure the default is available.');
@@ -42,14 +87,8 @@ runs:
           const baseBranch = context.payload.pull_request.base.ref;
 
           let commentBody = process.env.CUSTOM_MESSAGE;
-
           if (!commentBody) {
-            try {
-              const defaultTemplatePath = path.join(process.env.ACTION_PATH, 'default-message.md');
-              commentBody = fs.readFileSync(defaultTemplatePath, 'utf8');
-            } catch (error) {
-              throw new Error(`Failed to read default welcome message file: ${error.message}`);
-            }
+            throw new Error('No welcome message content provided.');
           }
 
           // Replace placeholders in the message template
