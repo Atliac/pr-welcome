@@ -7,7 +7,6 @@ Automatically post a welcome and guidance comment on pull requests. This action 
 - **Automated Welcomes**: Greets pull request authors with next steps and review instructions.
 - **Customizable Message**:
   - `custom-message`: Provide your own markdown message. Supports `{{prNumber}}` and `{{baseBranch}}` placeholders.
-- **Duplicate Prevention**: Detects if the action signature already exists in the comments to avoid duplicate posts.
 
 ---
 
@@ -66,9 +65,20 @@ jobs:
 
 ## Permissions
 
-The action requires only `issues: write` permission to retrieve and post comments:
+The action requires only `issues: write` permission to post comments:
 
 ```yaml
 permissions:
   issues: write
 ```
+
+---
+
+## Releases & Versioning
+
+This action follows [Semantic Versioning](https://semver.org/). 
+
+When referencing the action in your workflows, you can pin to a major version tag (like `@v1`) to automatically receive backward-compatible updates:
+
+- **Major Tag (e.g. `@v1`)**: Automatically updated to point to the latest minor/patch release of that version.
+- **Specific Version Tag (e.g. `@v1.0.0`)**: Recommended if you require absolute immutability and want to pin to a exact release.
