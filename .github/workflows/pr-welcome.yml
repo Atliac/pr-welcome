@@ -4,9 +4,10 @@ on:
   pull_request_target:
     types: [opened]
 
-# Required permissions: issues: write is sufficient for posting comments
+# Required permissions: issues: write and pull-requests: write for posting PR comments
 permissions:
   issues: write
+  pull-requests: write
 
 jobs:
   post-guidance:
@@ -18,7 +19,7 @@ jobs:
       # uses: ./ references the action in the current repository.
       # This is used for local testing. In external repositories,
       # use a versioned ref, e.g.: uses: Atliac/pr-welcome@v1
-      - name: Post guidance comment
+      - name: PR Welcome
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
