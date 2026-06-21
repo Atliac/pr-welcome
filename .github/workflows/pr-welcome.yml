@@ -1,0 +1,23 @@
+name: PR Guidance Comment
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+# Required permissions for reading and writing comments
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  post-guidance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Post guidance comment
+        uses: ./
+        with:
+          skip-draft-pr: 'false'
+          skip-collaborators: 'false'
+

@@ -1,0 +1,122 @@
+name: 'PR Welcome Comment'
+description: 'Automatically post a customizable welcome and guidance comment on pull requests.'
+author: 'Atliac'
+inputs:
+  github-token:
+    description: 'The GitHub token to use for API requests.'
+    required: false
+    default: ${{ github.token }}
+  skip-draft-pr:
+    description: 'Whether to skip posting comments on draft PRs.'
+    required: false
+    default: 'false'
+  skip-collaborators:
+    description: 'Whether to skip posting comments on PRs created by owner, collaborator, or members.'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    - name: Post guidance comment
+      uses: actions/github-script@v7
+      env:
+        SKIP_DRAFT_PR: ${{ inputs.skip-draft-pr }}
+        SKIP_COLLABORATORS: ${{ inputs.skip-collaborators }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const skipDraft = process.env.SKIP_DRAFT_PR === 'true';
+          const skipCollaborators = process.env.SKIP_COLLABORATORS === 'true';
+
+          if (skipDraft && context.payload.pull_request.draft) {
+            console.log('Skipping draft pull request.');
+            return;
+          }
+
+          if (skipCollaborators) {
+            const association = context.payload.pull_request.author_association;
+            if (association === 'OWNER' || association === 'COLLABORATOR' || association === 'MEMBER') {
+              console.log(`Skipping pull request created by user with association: ${association}`);
+              return;
+            }
+          }
+
+          const prNumber = context.issue.number;
+
+          // Fetch existing comments to prevent duplicate posts
+          const comments = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: prNumber
+          });
+
+          const signature = 'Automated message maintained by [Atliac]';
+          const alreadyCommented = comments.data.some(comment =>
+            comment.body.includes(signature)
+          );
+
+          if (alreadyCommented) {
+            console.log('Guidance comment already exists. Skipping.');
+            return;
+          }
+
+          const baseBranch = context.payload.pull_request.base.ref;
+
+          const commentBody = [
+            '## Welcome and Thank You! 👋',
+            '',
+            'Thank you for opening this pull request!',
+            '',
+            '### ⏳ Note on Review Times',
+            '',
+            'The maintainer may not react immediately. This is expected and normal, as the project is maintained as time permits. Thank you for your patience!',
+            '',
+            '### ✅ Your Action Items',
+            '',
+            '1. **Link and Auto-Close Issues:**',
+            '',
+            '   If this PR fixes any existing issues, please make sure to include closing keywords (such as `closes #123` or `fixes #456`) in your first PR message (the main description). This links the issues and automatically closes them when this PR is merged.',
+            '',
+            '2. **Invite Reviewers on Linked Issues:**',
+            '',
+            '   If this is a non-trivial PR, please leave a comment on the linked issues to invite others to review your changes. You can copy and paste the encouraging template below, which includes guidance to help reviewers know what to do:',
+            '',
+            '   ```text',
+            `   Hey everyone! I have opened a PR (#${prNumber}) to resolve this issue. I am inviting you to help test and review the PR!`,
+            '',
+            '   **No write access is needed** to participate, leave a review, or approve the PR, and no deep understanding of the codebase is required. Everyone benefits from multiple reviews!',
+            '',
+            '   ## How to Review',
+            '',
+            '   1. Inspect for Malicious Code:',
+            '',
+            '      Go to the **"Files changed"** tab, or check out the PR locally:',
+            '      ',
+            `      gh pr checkout ${prNumber}`,
+            '',
+            `      git diff origin/${baseBranch}`,
+            '',
+            '   2. Run the Project:',
+            '      Test the changes locally to verify they resolve the issue and do not introduce new problems.',
+            '',
+            '   3. Submit a Review:',
+            '',
+            '      - If you find issues, submit a review or comment with your feedback.',
+            '      - If everything looks correct, submit an **Approve** review and briefly explain what you checked/tested.',
+            '   ```',
+            '',
+            '### 🛠️ For the Maintainer',
+            '',
+            'If this PR is reviewed and approved by **two or more independent (standalone) reviewers**, it will significantly speed up the merge progress.',
+            '',
+            '---',
+            '',
+            '_Automated message maintained by [Atliac](https://github.com/Atliac/pr-welcome)._'
+          ].join('\n');
+
+          await github.rest.issues.createComment({
+            issue_number: prNumber,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: commentBody
+          });
