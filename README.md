@@ -23,9 +23,10 @@ on:
   pull_request_target:
     types: [opened]
 
-# Required permissions for reading and writing comments
+# Required permissions for reading and writing PR comments
 permissions:
   issues: write
+  pull-requests: write
 
 jobs:
   post-guidance:
@@ -65,11 +66,12 @@ jobs:
 
 ## Permissions
 
-The action requires only `issues: write` permission to post comments:
+The action requires `issues: write` and `pull-requests: write` permissions to post comments on pull requests:
 
 ```yaml
 permissions:
   issues: write
+  pull-requests: write
 ```
 
 ---
