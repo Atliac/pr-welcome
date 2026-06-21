@@ -27,7 +27,7 @@ inputs:
 
          If this is a non-trivial PR, please leave a comment on the linked issues to invite others to review your changes. You can copy and paste the encouraging template below, which includes guidance to help reviewers know what to do:
 
-         ```text
+         ````text
          Hey everyone! I have opened a PR (#{{prNumber}}) to resolve this issue. I am inviting you to help test and review the PR!
 
          **No write access is needed** to participate, leave a review, or approve the PR, and no deep understanding of the codebase is required. Everyone benefits from multiple reviews!
@@ -51,7 +51,7 @@ inputs:
 
             - If you find issues, submit a review or comment with your feedback.
             - If everything looks correct, submit an **Approve** review and briefly explain what you checked/tested.
-         ```
+         ````
 
       ### 🛠️ For the Maintainer
 
@@ -66,7 +66,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - name: Post guidance comment
+    - name: PR Welcome
       uses: actions/github-script@v9
       env:
         CUSTOM_MESSAGE: ${{ inputs.custom-message }}
