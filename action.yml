@@ -38,9 +38,11 @@ inputs:
 
             Go to the **"Files changed"** tab, or check out the PR locally:
 
+            ```
             gh pr checkout {{prNumber}}
 
             git diff origin/{{baseBranch}}
+            ```
 
          2. Run the Project:
             Test the changes locally to verify they resolve the issue and do not introduce new problems.

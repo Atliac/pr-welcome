@@ -76,6 +76,20 @@ permissions:
 
 ---
 
+## Why `pull_request_target`?
+
+This action uses the [`pull_request_target`](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target) event instead of `pull_request`. Here's why:
+
+| Event | Runs in context of | Token permissions | Works for fork PRs? |
+| :--- | :--- | :--- | :--- |
+| `pull_request` | The **PR's (fork's)** repository | Read-only (for public repos) | ❌ Will get 403 when posting comments |
+| `pull_request_target` | The **base** repository | Full permissions as defined in the workflow | ✅ Works as expected |
+
+> [!IMPORTANT]
+> Because `pull_request_target` runs workflows from the **base branch** (e.g. `main`), any changes to `.github/workflows/pr-welcome.yml` in a PR will **not** take effect for that PR. The workflow always executes the version that already exists on the default branch. If you modify the workflow file in a PR and expect the new behavior to apply immediately, it won't — the changes only activate after the PR is merged.
+
+---
+
 ## Releases & Versioning
 
 This action follows [Semantic Versioning](https://semver.org/).
