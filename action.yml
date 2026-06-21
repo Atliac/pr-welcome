@@ -65,7 +65,7 @@ runs:
   using: 'composite'
   steps:
     - name: Post guidance comment
-      uses: actions/github-script@v7
+      uses: actions/github-script@v9
       env:
         CUSTOM_MESSAGE: ${{ inputs.custom-message }}
       with:
