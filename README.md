@@ -46,9 +46,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           custom-message: |
             ## Hello and Welcome!
-            
+
             Thanks for opening PR #{{prNumber}} pointing to branch `{{baseBranch}}`.
-            
+
             Please review our contributing guidelines!
 ```
 
@@ -58,7 +58,7 @@ jobs:
 
 | Input | Description | Required | Default |
 | :--- | :--- | :--- | :--- |
-| `github-token` | The GitHub token to use for API requests. | No | `${{ github.token }}` |
+| `github-token` | The GitHub token to use for API requests. | **Yes** | — |
 | `custom-message` | An optional custom Markdown message to post. You can use `{{prNumber}}` and `{{baseBranch}}` as placeholders. | No | `''` (uses default guidance template) |
 
 ---
@@ -76,7 +76,7 @@ permissions:
 
 ## Releases & Versioning
 
-This action follows [Semantic Versioning](https://semver.org/). 
+This action follows [Semantic Versioning](https://semver.org/).
 
 When referencing the action in your workflows, you can pin to a major version tag (like `@v1`) to automatically receive backward-compatible updates:
 

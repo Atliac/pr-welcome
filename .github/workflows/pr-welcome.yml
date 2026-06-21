@@ -16,7 +16,9 @@ jobs:
         uses: actions/checkout@v4
 
       # uses: ./ references the action in the current repository.
-      # This is used for local testing. In external repositories, 
+      # This is used for local testing. In external repositories,
       # use a versioned ref, e.g.: uses: Atliac/pr-welcome@v1
       - name: Post guidance comment
         uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
