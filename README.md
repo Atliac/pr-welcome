@@ -29,10 +29,10 @@ permissions:
   pull-requests: write
 
 jobs:
-  post-guidance:
+  pr-welcome:
     runs-on: ubuntu-latest
     steps:
-      - name: Post guidance comment
+      - name: PR Welcome
         uses: Atliac/pr-welcome@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -41,7 +41,7 @@ jobs:
 ### With Custom Message
 
 ```yaml
-      - name: Post guidance comment
+      - name: PR Welcome
         uses: Atliac/pr-welcome@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

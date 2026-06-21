@@ -66,7 +66,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - name: Post guidance comment
+    - name: PR Welcome
       uses: actions/github-script@v9
       env:
         CUSTOM_MESSAGE: ${{ inputs.custom-message }}
