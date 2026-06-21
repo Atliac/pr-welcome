@@ -6,46 +6,23 @@ inputs:
     description: 'The GitHub token to use for API requests.'
     required: false
     default: ${{ github.token }}
-  skip-draft-pr:
-    description: 'Whether to skip posting comments on draft PRs.'
-    required: false
-    default: 'false'
-  skip-collaborators:
-    description: 'Whether to skip posting comments on PRs created by owner, collaborator, or members.'
-    required: false
-    default: 'false'
   custom-message:
     description: 'An optional custom Markdown message to post. You can use {{prNumber}} and {{baseBranch}} as placeholders.'
     required: false
     default: ''
+branding:
+  icon: 'message-square'
+  color: 'blue'
 runs:
   using: 'composite'
   steps:
     - name: Post guidance comment
       uses: actions/github-script@v7
       env:
-        SKIP_DRAFT_PR: ${{ inputs.skip-draft-pr }}
-        SKIP_COLLABORATORS: ${{ inputs.skip-collaborators }}
         CUSTOM_MESSAGE: ${{ inputs.custom-message }}
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const skipDraft = process.env.SKIP_DRAFT_PR === 'true';
-          const skipCollaborators = process.env.SKIP_COLLABORATORS === 'true';
-
-          if (skipDraft && context.payload.pull_request.draft) {
-            console.log('Skipping draft pull request.');
-            return;
-          }
-
-          if (skipCollaborators) {
-            const association = context.payload.pull_request.author_association;
-            if (association === 'OWNER' || association === 'COLLABORATOR' || association === 'MEMBER') {
-              console.log(`Skipping pull request created by user with association: ${association}`);
-              return;
-            }
-          }
-
           const prNumber = context.issue.number;
 
           // Fetch existing comments to prevent duplicate posts

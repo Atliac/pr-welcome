@@ -1,13 +1,10 @@
 # PR Welcome Comment Action 👋
 
-Automatically post a customizable welcome and guidance comment on pull requests. This action helps maintainers encourage first-time contributors and guides reviewers on how to inspect, run, and review changes.
+Automatically post a welcome and guidance comment on pull requests. This action helps maintainers encourage first-time contributors and guides reviewers on how to inspect, run, and review changes.
 
 ## Features
 
 - **Automated Welcomes**: Greets pull request authors with next steps and review instructions.
-- **Configurable Skipping**:
-  - `skip-draft-pr`: Skip posting comments while the PR is in a draft state.
-  - `skip-collaborators`: Skip posting comments for repository owners, collaborators, or organization members.
 - **Customizable Message**:
   - `custom-message`: Provide your own markdown message. Supports `{{prNumber}}` and `{{baseBranch}}` placeholders.
 - **Duplicate Prevention**: Detects if the action signature already exists in the comments to avoid duplicate posts.
@@ -25,7 +22,7 @@ name: PR Guidance Comment
 
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [opened]
 
 # Required permissions for reading and writing comments
 permissions:
@@ -39,8 +36,6 @@ jobs:
         uses: Atliac/pr-welcome@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          skip-draft-pr: 'true'
-          skip-collaborators: 'false'
 ```
 
 ### With Custom Message
@@ -65,8 +60,6 @@ jobs:
 | Input | Description | Required | Default |
 | :--- | :--- | :--- | :--- |
 | `github-token` | The GitHub token to use for API requests. | No | `${{ github.token }}` |
-| `skip-draft-pr` | Set to `'true'` to skip posting comments on draft PRs. | No | `'false'` |
-| `skip-collaborators` | Set to `'true'` to skip comments on PRs created by owners/collaborators/members. | No | `'false'` |
 | `custom-message` | An optional custom Markdown message to post. You can use `{{prNumber}}` and `{{baseBranch}}` as placeholders. | No | `''` (uses default guidance template) |
 
 ---

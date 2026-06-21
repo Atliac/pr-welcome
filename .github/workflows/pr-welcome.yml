@@ -2,7 +2,7 @@ name: PR Guidance Comment
 
 on:
   pull_request:
-    types: [opened, ready_for_review]
+    types: [opened]
 
 # Required permissions: issues: write is sufficient for posting comments
 permissions:
@@ -14,12 +14,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       # uses: ./ references the action in the current repository.
       # This is used for local testing. In external repositories, 
       # use a versioned ref, e.g.: uses: Atliac/pr-welcome@v1
       - name: Post guidance comment
         uses: ./
-        with:
-          skip-draft-pr: 'false'
-          skip-collaborators: 'false'
-

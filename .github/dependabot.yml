@@ -13,7 +13,7 @@ updates:
     # --- Optional Settings ---
     open-pull-requests-limit: 3
     labels:
-      #- "ci"
+      - "ci"
       - "dependencies"
     groups:
       actions:
