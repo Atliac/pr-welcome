@@ -17,10 +17,10 @@ Create a workflow file in your repository at `.github/workflows/pr-welcome.yml`:
 ### Default Configuration
 
 ```yaml
-name: PR Guidance Comment
+name: PR Welcome
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened]
 
 # Required permissions for reading and writing comments
